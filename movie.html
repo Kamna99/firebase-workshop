@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MovieInfo</title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <style>
+        #tbl_users_list tr td:nth-child(1){
+          display: none;
+          margin-top:750px;
+        }
+      </style>
+      <!-- The core Firebase JS SDK is always required and must be listed first -->
+      <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+      
+      <!-- TODO: Add SDKs for Firebase products that you want to use
+           https://firebase.google.com/docs/web/setup#config-web-app -->
+      <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "AIzaSyB6OEm5LN3gGTegLWv4j5rNHSqYr4fVb_Q",
+          authDomain: "world-eda5a.firebaseapp.com",
+          databaseURL: "https://world-eda5a.firebaseio.com",
+          projectId: "world-eda5a",
+          storageBucket: "world-eda5a.appspot.com",
+          messagingSenderId: "953143570226",
+          appId: "1:953143570226:web:5647cb55a8d4d785"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+      </script>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="book.html">MovieInfo</a>
+          </div>
+      </div>
+    </nav>
+
+    <div class="container" >
+      <div id="movie" class="well"></div>
+     
+            <table>
+              <tr>
+              
+               <td><input type="hidden" name="id" id="user_id"/></td>
+              </tr>
+              <tr>
+               <td>User Name: </td>
+               <td><input type="text" name="user_name" id="user_name" /></td>
+              </tr>
+              <tr>
+              <tr>
+                    <td>E-Mail: </td>
+                    <td><input type="text" name="user_feedback" id="user_email" /></td>
+                     </tr>
+              <tr>
+              <tr>
+                      <td>Feedback: </td>
+                      <td><input type="text" name="user_feedback" id="user_feedback" /></td>
+                       </tr>
+                <tr>
+               <td colspan="2">
+                <input type="button" value="Save" onclick="save_user();" />
+               
+               </td>
+              </tr>
+          </table>
+         
+         <h3>Feedback</h3>
+         
+         <table id="tbl_users_list" border="1">
+          <tr>
+          <td>Id</td>
+           <td>NAME</td>
+           <td>E-Mail</td>
+           <td>FEEDBACK</td>
+          
+          
+          </tr>
+         </table>
+         
+          <script>
+         
+          var tblUsers = document.getElementById('tbl_users_list');
+          var databaseRef = firebase.database().ref('users/');
+          var rowIndex = 1;
+          
+          databaseRef.on('value', function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                var childKey = childSnapshot.key;
+                var childData = childSnapshot.val();
+                var childEmail= childSnapshot.val();
+                var childFeedback= childSnapshot.val();
+            
+            var row = tblUsers.insertRow(rowIndex);
+            var cellId = row.insertCell(0);
+            var cellName = row.insertCell(1);
+            var cellEmail=row.insertCell(2);
+            var cellFeedback = row.insertCell(3);
+
+            cellId.appendChild(document.createTextNode(childKey));
+            cellName.appendChild(document.createTextNode(childData.user_name));
+            cellFeedback.appendChild(document.createTextNode(childData.user_feedback));
+            cellEmail.appendChild(document.createTextNode(childEmail.user_email));
+            rowIndex = rowIndex + 1;
+                
+            });
+
+          function save_user(){
+           var user_name = document.getElementById('user_name').value;
+           var user_email = document.getElementById('user_email').value;
+           var user_feedback = document.getElementById('user_feedback').value;
+           var uid = firebase.database().ref().child('users').push().key;
+           
+           var data = {
+            user_id: uid,
+            user_name: user_name,
+            user_email: user_email,
+            user_feedback: user_feedback
+           }
+           
+           var updates = {};
+           updates['users/' + uid] = data;
+           firebase.database().ref().update(updates);
+           
+           alert('The feedback is noted successfully!');
+           
+          }
+         
+         </script>
+         
+      
+   
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+   
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+  <script src="main.js"></script>
+  <script>
+    getMovie();
+  </script>
+  </body>
+</html>
